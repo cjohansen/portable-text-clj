@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>portable-text-clj</groupId>
+  <artifactId>portable-text-clj</artifactId>
+  <version>2020.02.11</version>
+  <name>portable-text-clj</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojure</artifactId>
+      <version>1.10.1</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+  </build>
+  <repositories>
+    <repository>
+      <id>clojars</id>
+      <url>https://repo.clojars.org/</url>
+    </repository>
+  </repositories>
+  <distributionManagement>
+    <repository>
+      <id>clojars</id>
+      <name>Clojars repository</name>
+      <url>https://clojars.org/repo</url>
+    </repository>
+  </distributionManagement>
+  <description>Render sanity.io Portable Text to HTML.</description>
+  <url>https://github.com/cjohansen/portable-text-clj</url>
+  <licenses>
+    <license>
+      <name>EPL</name>
+      <url>https://opensource.org/licenses/EPL-2.0</url>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git://github.com/cjohansen/portable-text-clj.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/cjohansen/portable-text-clj.git</developerConnection>
+    <tag>v2020.02.12</tag>
+    <url>https://github.com/cjohansen/portable-text-clj</url>
+  </scm>
+</project>
