@@ -9,6 +9,20 @@ Passes most of the official
 JavaScript library-specific features, and some image transforms (to be
 implemented).
 
+## Install
+
+With tools.deps:
+
+```clj
+cjohansen/portable-text {:mvn/version "2020.02.12"}
+```
+
+With Leiningen:
+
+```clj
+[cjohansen/portable-text "2020.02.12"]
+```
+
 ## Usage
 
 ```clj
