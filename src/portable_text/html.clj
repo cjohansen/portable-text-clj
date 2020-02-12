@@ -209,6 +209,7 @@
   ([blocks opt]
    (let [blocks (if (sequential? blocks) blocks [blocks])]
      (let [content (->> blocks
+                        (remove nil?)
                         (partition-by (comp nil? :listItem))
                         (mapcat (fn [xs]
                                   (if (-> xs first :listItem)
