@@ -16,6 +16,6 @@ clean:
 	rm -fr target
 
 deploy: target/portable-text.jar
-	mvn deploy:deploy-file -Dfile=portable-text.jar -DrepositoryId=clojars -Durl=https://clojars.org/repo -DpomFile=pom.xml
+	mvn deploy:deploy-file -Dfile=target/portable-text.jar -DrepositoryId=clojars -Durl=https://clojars.org/repo -DpomFile=pom.xml
 
 .PHONY: test autotest deploy clean jar
