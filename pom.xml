@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cjohansen</groupId>
   <artifactId>portable-text-clj</artifactId>
-  <version>2020.02.11</version>
+  <version>2020.02.12</version>
   <name>portable-text-clj</name>
   <dependencies>
     <dependency>
