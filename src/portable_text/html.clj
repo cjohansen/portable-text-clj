@@ -1,7 +1,10 @@
 (ns portable-text.html
-  (:require [clojure.string :as str]
-            [clojure.set :as set]
+  (:require [clojure.set :as set]
+            [clojure.string :as str]
             [portable-text.image :as image]))
+
+(defn listItem [x]
+  (or (:listItem x) (:list-item x)))
 
 (defn children? [xs]
   (or (seq? xs)
@@ -83,7 +86,7 @@
    "blockquote" :blockquote})
 
 (defn tag-name [style & [block]]
-  (or (when (:listItem block) :li)
+  (or (when (listItem block) :li)
       (tag-names style)
       (when (= "block" (:_type block)) :p)
       (when (keyword? style) style)
@@ -156,8 +159,9 @@
 (defmethod render-block :button [opt {:keys [text]}]
   (block-hiccup nil :button (text-content text)))
 
-(defmethod render-block :block [opt {:keys [style children markDefs] :as block}]
-  (let [opt (assoc opt :_defs (map-by :_key markDefs))
+(defmethod render-block :block [opt {:keys [style children] :as block}]
+  (let [mark-defs (or (:markDefs block) (:mark-defs block))
+        opt (assoc opt :_defs (map-by :_key mark-defs))
         content (->> children
                      sort-marks
                      (map #(render-block (assoc opt ::inline? true) %))
@@ -174,8 +178,8 @@
   (get list-item :level 1))
 
 (defn same-list? [list-item x]
-  (or (= (select-keys list-item [:level :listItem])
-         (select-keys x [:level :listItem]))
+  (or (= (select-keys list-item [:level :listItem :list-item])
+         (select-keys x [:level :listItem :list-item]))
       (< (list-level list-item) (list-level x))))
 
 (declare render-lists)
@@ -194,7 +198,7 @@
     (if x
       (let [children? (comp (partial < (list-level x)) list-level)]
         (recur (drop-while children? xs) (conj list-items (concat [x] (take-while children? xs)))))
-      [(tag-names (-> items first :listItem)) {} (map list-item list-items)])))
+      [(tag-names (or (-> items first listItem))) {} (map list-item list-items)])))
 
 (defn render-lists [list-blocks]
   (loop [xs list-blocks
@@ -210,9 +214,9 @@
    (let [blocks (if (sequential? blocks) blocks [blocks])]
      (let [content (->> blocks
                         (remove nil?)
-                        (partition-by (comp nil? :listItem))
+                        (partition-by (comp nil? listItem))
                         (mapcat (fn [xs]
-                                  (if (-> xs first :listItem)
+                                  (if (-> xs first listItem)
                                     (render-lists xs)
                                     (map #(render-block opt %) xs)))))]
        (cond

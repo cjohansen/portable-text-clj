@@ -1,7 +1,7 @@
 (ns portable-text.html-test
-  (:require [portable-text.html :as sut]
+  (:require [clojure.string :as str]
             [clojure.test :refer [deftest is]]
-            [clojure.string :as str]))
+            [portable-text.html :as sut]))
 
 (deftest empty-block-001
   (is (= (sut/render
@@ -249,6 +249,36 @@
  {:sanity/project-id "3do82whm"
   :sanity/dataset "production"
   :cdn-url "https://cdn.mysite.com"})
+
+(sut/to-hiccup
+ [{:_key "8c59040a26e7"
+   :_type "block"
+   :children [{:_key "8c59040a26e70"
+               :_type "span"
+               :marks []
+               :text "Ja, tenk på "}
+              {:_key "8c59040a26e71"
+               :_type "span"
+               :marks ["strong"]
+               :text "det"}
+              {:_key "8c59040a26e72"
+               :_type "span"
+               :marks []
+               :text " du."}]
+   :markDefs []
+   :style "normal"}
+  {:_key "64ea7c3e0c63"
+   :_type "block"
+   :children [{:_key "64ea7c3e0c630"
+               :_type "span"
+               :marks []
+               :text "Voldsomt flott"}
+              {:_key "64ea7c3e0c631"
+               :_type "span"
+               :marks ["underline"]
+               :text "a gitt!!"}]
+   :markDefs []
+   :style "normal"}])
 
 (deftest materialized-image-support-013
   (is (= (sut/render
@@ -1045,3 +1075,36 @@
              :text " Sanity is addictive."}],
            :markDefs []})
          "<p><span>A word of <em>warning;</em></span> Sanity is addictive.</p>")))
+
+(deftest basic-bullet-list-010-lisp-cased-data
+  (is (= (sut/render
+          [{:style "normal",
+            :_type "block",
+            :_key "f94596b05b41",
+            :mark-defs [],
+            :children
+            [{:_type "span",
+              :text "Let's test some of these lists!",
+              :marks []}]}
+           {:list-item "bullet",
+            :style "normal",
+            :level 1,
+            :_type "block",
+            :_key "937effb1cd06",
+            :mark-defs [],
+            :children [{:_type "span", :text "Bullet 1", :marks []}]}
+           {:list-item "bullet",
+            :style "normal",
+            :level 1,
+            :_type "block",
+            :_key "bd2d22278b88",
+            :mark-defs [],
+            :children [{:_type "span", :text "Bullet 2", :marks []}]}
+           {:list-item "bullet",
+            :style "normal",
+            :level 1,
+            :_type "block",
+            :_key "a97d32e9f747",
+            :mark-defs [],
+            :children [{:_type "span", :text "Bullet 3", :marks []}]}])
+         "<div><p>Let&#x27;s test some of these lists!</p><ul><li>Bullet 1</li><li>Bullet 2</li><li>Bullet 3</li></ul></div>")))
