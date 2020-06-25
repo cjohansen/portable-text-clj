@@ -1109,7 +1109,7 @@
             :children [{:_type "span", :text "Bullet 3", :marks []}]}])
          "<div><p>Let&#x27;s test some of these lists!</p><ul><li>Bullet 1</li><li>Bullet 2</li><li>Bullet 3</li></ul></div>")))
 
-(defmethod sut/render-mark :internalLink [mark content]
+(defmethod sut/render-mark :internalLink [config mark content]
   [:a {:href (format "/files/%s" (-> mark :reference :_id))} content])
 
 (deftest custom-mark-implementation

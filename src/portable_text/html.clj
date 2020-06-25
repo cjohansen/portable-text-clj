@@ -135,16 +135,16 @@
     {:style "text-decoration:underline;"}
     {}))
 
-(defmulti render-mark (fn [mark content] (keyword (:_type mark))))
+(defmulti render-mark (fn [opt mark content] (keyword (:_type mark))))
 
-(defmethod render-mark :default [mark-def content]
+(defmethod render-mark :default [opt mark-def content]
   (let [tag (tag-name (:_type mark-def))
         attrs (mark-def-attrs mark-def)]
     (el tag attrs content)))
 
-(defn block-hiccup [mark-defs mark content]
-  (if-let [def (get mark-defs mark)]
-    (render-mark def content)
+(defn block-hiccup [opt mark content]
+  (if-let [def (get-in opt [:_defs mark])]
+    (render-mark opt def content)
     (el (tag-name mark) (mark-attrs mark) content)))
 
 (defn text-content [text]
@@ -156,7 +156,7 @@
          [mark & marks] (reverse marks)]
     (if (nil? mark)
       content
-      (recur (block-hiccup (:_defs opt) mark content) marks))))
+      (recur (block-hiccup opt mark content) marks))))
 
 (defmethod render-block :code [opt {:keys [language code]}]
   [:pre {:data-language language}

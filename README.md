@@ -99,10 +99,10 @@ definition:
 ```clj
 (require '[portable-text.html :as pt])
 
-(defmethod pt/render-mark :internalLink [mark content]
+(defmethod pt/render-mark :internalLink [config mark content]
   [:a {:href (format "/files/%s" (-> mark :reference :_id))} content])
 
-(sut/render
+(pt/render
  [{:_key "8cff0fcf4e1c"
    :_type "block"
    :children
