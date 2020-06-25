@@ -99,7 +99,7 @@ definition:
 ```clj
 (require '[portable-text.html :as pt])
 
-(defmethod pt/render-mark "internalLink" [mark content]
+(defmethod pt/render-mark :internalLink [mark content]
   [:a {:href (format "/files/%s" (-> mark :reference :_id))} content])
 
 (sut/render

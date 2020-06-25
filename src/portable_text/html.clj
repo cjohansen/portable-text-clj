@@ -135,7 +135,7 @@
     {:style "text-decoration:underline;"}
     {}))
 
-(defmulti render-mark (fn [mark content] (:_type mark)))
+(defmulti render-mark (fn [mark content] (keyword (:_type mark))))
 
 (defmethod render-mark :default [mark-def content]
   (let [tag (tag-name (:_type mark-def))
