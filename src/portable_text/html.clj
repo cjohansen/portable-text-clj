@@ -125,7 +125,8 @@
 (defn- mark-def-attrs [def]
   (->> def
        (keep (fn [[k v]]
-               (when-not (str/starts-with? (name k) "_")
+               (when (and (not (str/starts-with? (name k) "_"))
+                          (or (string? v) (number? v) (boolean? v)))
                  (mark-attr-pair def k v))))
        (into {})))
 
@@ -134,11 +135,16 @@
     {:style "text-decoration:underline;"}
     {}))
 
+(defmulti render-mark (fn [mark content] (:_type mark)))
+
+(defmethod render-mark :default [mark-def content]
+  (let [tag (tag-name (:_type mark-def))
+        attrs (mark-def-attrs mark-def)]
+    (el tag attrs content)))
+
 (defn block-hiccup [mark-defs mark content]
   (if-let [def (get mark-defs mark)]
-    (let [tag (tag-name (:_type def))
-          attrs (mark-def-attrs def)]
-      (el tag attrs content))
+    (render-mark def content)
     (el (tag-name mark) (mark-attrs mark) content)))
 
 (defn text-content [text]

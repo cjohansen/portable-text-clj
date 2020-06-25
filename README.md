@@ -89,6 +89,38 @@ Images are rendered from Sanity's CDN by default, but you can override it:
 
 Image transforms such as crop and hotspot are not (yet) supported.
 
+## Custom mark definitions
+
+If you've [customized the block editor](https://www.sanity.io/docs/customization)
+to include custom marks, you might want custom rendering of those marks.
+Implement `portable-text.html/render-mark` for the `:_type` of your mark
+definition:
+
+```clj
+(require '[portable-text.html :as pt])
+
+(defmethod pt/render-mark "internalLink" [mark content]
+  [:a {:href (format "/files/%s" (-> mark :reference :_id))} content])
+
+(sut/render
+ [{:_key "8cff0fcf4e1c"
+   :_type "block"
+   :children
+   [{:_key "8cff0fcf4e1c1"
+     :_type "span"
+     :marks ["7d81b2a6f6b6"]
+     :text "A document"}]
+   :mark-defs
+   [{:_key "7d81b2a6f6b6"
+     :_type "internalLink"
+     :reference {:_id "666"
+                 :_type "file"
+                 :title "My file"}}]
+   :style "normal"}])
+
+;;=> "<p><a href=\"/files/666\">A document</a></p>"
+```
+
 ## Tests
 
 ```sh
