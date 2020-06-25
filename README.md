@@ -51,6 +51,8 @@ specify details about your Sanity installation, which is necessary to render
 images correctly:
 
 ```clj
+(require '[portable-text.html :as pt])
+
 (pt/render
  [{:_type "image",
    :_key "d234a4fa317a",
@@ -68,7 +70,9 @@ images correctly:
 Images are rendered from Sanity's CDN by default, but you can override it:
 
 ```clj
-(sut/to-hiccup
+(require '[portable-text.html :as pt])
+
+(pt/to-hiccup
  [{:_type "image",
    :_key "d234a4fa317a",
    :asset
