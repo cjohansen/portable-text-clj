@@ -192,7 +192,7 @@
 
 (defn list-item [xs]
   (let [[item & nested-items] xs
-        [tag attr children] (render-block {} item)]
+        [tag attr & children] (render-block {} item)]
     [tag attr (concat (if (contains? #{nil "normal"} (:style item))
                         children
                         (list [(some-> item :style tag-name) {} children]))

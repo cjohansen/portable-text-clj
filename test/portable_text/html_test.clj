@@ -1130,3 +1130,23 @@
             :style "normal"}])
          "<p><a href=\"/files/2336fbf3-5d55-4dad-a8d1-5b074a4d874a\">A document</a></p>")))
 
+(deftest custom-mark-in-list
+  (is (= (sut/render
+          (list
+           {:_key "0d14be59568c",
+            :_type "block",
+            :children
+            [{:_key "0d14be59568c0",
+              :_type "span",
+              :marks [],
+              :text "Meld flytting til kundeservice på telefon "}
+             {:_key "0d14be59568c1",
+              :_type "span",
+              :marks ["440bd7a4f597"],
+              :text "21 49 69 10"}
+             {:_key "0d14be59568c2", :_type "span", :marks [], :text ""}],
+            :level 1,
+            :list-item "bullet",
+            :mark-defs [{:_key "440bd7a4f597", :_type "telLink", :tel "21496910"}],
+            :style "normal"}))
+         "<ul><li>Meld flytting til kundeservice på telefon <span tel=\"21496910\">21 49 69 10</span></li></ul>")))
