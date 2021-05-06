@@ -27,6 +27,20 @@
    \" "&quot;"
    \> "&gt;"})
 
+(defn parse-hiccup-vector [x]
+  (let [[attrs & content] (cond-> (rest x)
+                            (not (map? (second x))) (into [{}]))
+        sym (name (first x))
+        [_ id] (re-find #"#([^\.#]+)" sym)
+        [el & classes] (-> (str/replace sym #"#([^#\.]+)" "")
+                           (str/split #"\."))]
+    (into
+     [(keyword el)
+      (cond-> attrs
+        id (assoc :id id)
+        (seq classes) (update :class #(str/join " " (if % (conj classes %) classes))))]
+     content)))
+
 (defn to-html [x]
   (cond
     (string? x) (str/escape x escaped-chars)
@@ -34,11 +48,15 @@
                        (map to-html)
                        (str/join ""))
     (nil? x) ""
-    :default (let [[tag attrs & content] x
+    :default (let [[tag attrs content] (parse-hiccup-vector x)
                    tag-name (name tag)]
                (if (self-closing tag)
                  (format "<%s%s/>" tag-name (attr-str attrs))
-                 (format "<%s%s>%s</%s>" tag-name (attr-str attrs) (to-html content) tag-name)))))
+                 (format "<%s%s>%s</%s>"
+                         tag-name
+                         (attr-str attrs)
+                         (to-html (drop 2 x))
+                         tag-name)))))
 
 (defmulti render-block (fn [opt {:keys [_type]}] (keyword _type)))
 

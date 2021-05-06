@@ -1198,3 +1198,11 @@
           '("Strømkostnad du ville fått i ")
           [:span.js-el-price-month {}]
           '(".")])))
+
+(deftest custom-block-rendering
+  (is (= (sut/to-html
+          [:p {}
+           '("Strømkostnad du ville fått i ")
+           [:span.js-el-price-month [:span.inner]]
+           '(".")])
+         "<p>Strømkostnad du ville fått i <span class=\"js-el-price-month\"></span>.</p>")))
