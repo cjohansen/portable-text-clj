@@ -1196,7 +1196,7 @@
             :style "normal"}])
          [:p {}
           '("Strømkostnad du ville fått i ")
-          [:span.js-el-price-month {}]
+          [:span.js-el-price-month]
           '(".")])))
 
 (deftest custom-block-rendering

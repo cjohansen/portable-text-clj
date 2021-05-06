@@ -64,14 +64,19 @@
   (let [res (render-block opt block)]
     (if (or (not (vector? res))
             (not (keyword? (first res)))
-            (map? (second res)))
+            (map? (second res))
+            (and (vector? res) (= 1 (count res))))
       res
       (apply vector (first res) {} (rest res)))))
 
 (defn el [tag attr children]
-  (if (vector? children)
-    [tag attr children]
-    (apply vector tag attr children)))
+  (cond-> [tag]
+    (or (not-empty attr)
+        (not-empty children)) (conj attr)
+    (vector? children) (conj children)
+    (and
+     (not (vector? children))
+     (not-empty children)) (into children)))
 
 (defn hiccup? [x]
   (and (vector? x)
