@@ -1150,3 +1150,30 @@
             :mark-defs [{:_key "440bd7a4f597", :_type "telLink", :tel "21496910"}],
             :style "normal"}))
          "<ul><li>Meld flytting til kundeservice på telefon <span tel=\"21496910\">21 49 69 10</span></li></ul>")))
+
+(defmethod sut/render-block :priceCalculatorPlaceholder [config block]
+  [(keyword (str "span." (:class-name block)))])
+
+(deftest custom-block-rendering
+  (is (= (sut/to-hiccup
+          [{:_key "2a421de718f1"
+            :_type "block"
+            :children
+            [{:_key "2a421de718f10"
+              :_type "span"
+              :marks []
+              :text "Strømkostnad du ville fått i "}
+             {:_id "9a58f24f-d65c-469f-afce-33f2f4f9f22d"
+              :_type "priceCalculatorPlaceholder"
+              :class-name "js-el-price-month"
+              :title "Gjeldende måned"}
+             {:_key "2a421de718f12"
+              :_type "span"
+              :marks []
+              :text "."}]
+            :mark-defs []
+            :style "normal"}])
+         [:p {}
+          '("Strømkostnad du ville fått i ")
+          [:span.js-el-price-month {}]
+          '(".")])))

@@ -42,6 +42,14 @@
 
 (defmulti render-block (fn [opt {:keys [_type]}] (keyword _type)))
 
+(defn render-hiccup-block [opt block]
+  (let [res (render-block opt block)]
+    (if (or (not (vector? res))
+            (not (keyword? (first res)))
+            (map? (second res)))
+      res
+      (apply vector (first res) {} (rest res)))))
+
 (defn el [tag attr children]
   (if (vector? children)
     [tag attr children]
@@ -170,7 +178,7 @@
         opt (assoc opt :_defs (map-by :_key mark-defs))
         content (->> children
                      sort-marks
-                     (map #(render-block (assoc opt ::inline? true) %))
+                     (map #(render-hiccup-block (assoc opt ::inline? true) %))
                      merge-same-tag-siblings)]
     (el (tag-name style block) {} content)))
 
