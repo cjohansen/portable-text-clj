@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cjohansen</groupId>
   <artifactId>portable-text-clj</artifactId>
-  <version>2021.05.06</version>
+  <version>2021.05.06.2</version>
   <name>portable-text-clj</name>
   <dependencies>
     <dependency>
@@ -39,7 +39,7 @@
   <scm>
     <connection>scm:git:git://github.com/cjohansen/portable-text-clj.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/cjohansen/portable-text-clj.git</developerConnection>
-    <tag>v2021.05.06</tag>
+    <tag>v2021.05.06.2</tag>
     <url>https://github.com/cjohansen/portable-text-clj</url>
   </scm>
 </project>
