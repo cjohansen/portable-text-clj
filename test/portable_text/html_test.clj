@@ -1151,6 +1151,27 @@
             :style "normal"}))
          "<ul><li>Meld flytting til kundeservice på telefon <span tel=\"21496910\">21 49 69 10</span></li></ul>")))
 
+(defmethod sut/render-mark :terse [config mark content]
+  [:a content])
+
+(deftest custom-mark-with-terse-hiccup
+  (is (= (sut/to-hiccup
+          [{:_key "8cff0fcf4e1c"
+            :_type "block"
+            :children
+            [{:_key "8cff0fcf4e1c1"
+              :_type "span"
+              :marks ["7d81b2a6f6b6"]
+              :text "A document"}]
+            :mark-defs
+            [{:_key "7d81b2a6f6b6"
+              :_type "terse"
+              :reference {:_id "2336fbf3-5d55-4dad-a8d1-5b074a4d874a"
+                          :_type "file"
+                          :title "My file"}}]
+            :style "normal"}])
+         [:p {} [:a {} '("A document")]])))
+
 (defmethod sut/render-block :priceCalculatorPlaceholder [config block]
   [(keyword (str "span." (:class-name block)))])
 
