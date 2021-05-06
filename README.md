@@ -14,13 +14,13 @@ implemented).
 With tools.deps:
 
 ```clj
-cjohansen/portable-text-clj {:mvn/version "2020.06.30"}
+cjohansen/portable-text-clj {:mvn/version "2021.05.06"}
 ```
 
 With Leiningen:
 
 ```clj
-[cjohansen/portable-text-clj "2020.06.30"]
+[cjohansen/portable-text-clj "2021.05.06"]
 ```
 
 ## Usage
@@ -130,7 +130,7 @@ make autotest
 
 ## License
 
-Copyright © 2020 Christian Johansen
+Copyright © 2020-2021 Christian Johansen
 
 Distributed under the Eclipse Public License either version 1.0 or (at your
 option) any later version.
