@@ -255,10 +255,10 @@
 (defn list-item [xs]
   (let [[item & nested-items] xs
         [tag attr & children] (render-block {} item)]
-    [tag attr (concat (if (contains? #{nil "normal"} (:style item))
-                        children
-                        (list [(some-> item :style tag-name) {} children]))
-                      (render-lists nested-items))]))
+    (el tag attr (concat (if (contains? #{nil "normal"} (:style item))
+                           children
+                           (list [(some-> item :style tag-name) {} children]))
+                         (render-lists nested-items)))))
 
 (defn render-list [items]
   (loop [[x & xs] items
@@ -266,7 +266,7 @@
     (if x
       (let [children? (comp (partial < (list-level x)) list-level)]
         (recur (drop-while children? xs) (conj list-items (concat [x] (take-while children? xs)))))
-      [(tag-names (or (-> items first listItem))) {} (map list-item list-items)])))
+      (el (tag-names (or (-> items first listItem))) {} (map list-item list-items)))))
 
 (defn render-lists [list-blocks]
   (loop [xs list-blocks

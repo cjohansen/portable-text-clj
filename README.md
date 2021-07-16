@@ -14,13 +14,13 @@ implemented).
 With tools.deps:
 
 ```clj
-cjohansen/portable-text-clj {:mvn/version "2021.07.16.2"}
+cjohansen/portable-text-clj {:mvn/version "2021.07.16.3"}
 ```
 
 With Leiningen:
 
 ```clj
-[cjohansen/portable-text-clj "2021.07.16.2"]
+[cjohansen/portable-text-clj "2021.07.16.3"]
 ```
 
 ## Usage
