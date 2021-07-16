@@ -240,46 +240,6 @@
            :sanity/dataset "production"})
          "<div><p>Also, images are pretty common.</p><figure><img src=\"https://cdn.sanity.io/images/3do82whm/production/YiOKD0O6AdjKPaK24WtbOEv0-3456x2304.jpg\"/></figure></div>")))
 
-(sut/to-hiccup
- [{:_type "image",
-   :_key "d234a4fa317a",
-   :asset
-   {:_type "reference",
-    :_ref "image-YiOKD0O6AdjKPaK24WtbOEv0-3456x2304-jpg"}}]
- {:sanity/project-id "3do82whm"
-  :sanity/dataset "production"
-  :cdn-url "https://cdn.mysite.com"})
-
-(sut/to-hiccup
- [{:_key "8c59040a26e7"
-   :_type "block"
-   :children [{:_key "8c59040a26e70"
-               :_type "span"
-               :marks []
-               :text "Ja, tenk på "}
-              {:_key "8c59040a26e71"
-               :_type "span"
-               :marks ["strong"]
-               :text "det"}
-              {:_key "8c59040a26e72"
-               :_type "span"
-               :marks []
-               :text " du."}]
-   :markDefs []
-   :style "normal"}
-  {:_key "64ea7c3e0c63"
-   :_type "block"
-   :children [{:_key "64ea7c3e0c630"
-               :_type "span"
-               :marks []
-               :text "Voldsomt flott"}
-              {:_key "64ea7c3e0c631"
-               :_type "span"
-               :marks ["underline"]
-               :text "a gitt!!"}]
-   :markDefs []
-   :style "normal"}])
-
 (deftest materialized-image-support-013
   (is (= (sut/render
           [{:style "normal",
@@ -1170,7 +1130,7 @@
                           :_type "file"
                           :title "My file"}}]
             :style "normal"}])
-         [:p {} [:a {} '("A document")]])))
+         [:p {} [:a {} "A document"]])))
 
 (defmethod sut/render-block :priceCalculatorPlaceholder [config block]
   [(keyword (str "span." (:class-name block)))])
@@ -1195,9 +1155,9 @@
             :mark-defs []
             :style "normal"}])
          [:p {}
-          '("Strømkostnad du ville fått i ")
+          "Strømkostnad du ville fått i "
           [:span.js-el-price-month]
-          '(".")])))
+          "."])))
 
 (deftest custom-block-rendering
   (is (= (sut/to-html
@@ -1206,3 +1166,26 @@
            [:span.js-el-price-month [:span.inner]]
            '(".")])
          "<p>Strømkostnad du ville fått i <span class=\"js-el-price-month\"></span>.</p>")))
+
+(defmethod sut/render-block :productPlaceholder [config block]
+  [:span (format "{{%s}}" (:var-name block))])
+
+(deftest produces-readable-hiccup-without-lots-of-nested-seqs
+  (is (= (sut/to-hiccup
+          {:_key "73335d2fc3be"
+           :_type "block"
+           :children
+           [{:_type "span"
+             :marks []
+             :text "Some text here"}
+            {:_type "span"
+             :marks []
+             :text
+             ", and then more text over here. "}
+            {:_type "span"
+             :marks []
+             :text
+             "And here:\na newline"}]
+           :mark-defs []
+           :style "normal"})
+         [:p {} "Some text here, and then more text over here. And here:" [:br] "a newline"])))

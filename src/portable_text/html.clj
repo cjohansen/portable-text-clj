@@ -1,6 +1,7 @@
 (ns portable-text.html
   (:require [clojure.set :as set]
             [clojure.string :as str]
+            [clojure.walk :as walk]
             [portable-text.image :as image]))
 
 (defn listItem [x]
@@ -66,8 +67,10 @@
             (not (keyword? (first res)))
             (map? (second res))
             (and (vector? res) (= 1 (count res))))
-      res
-      (apply vector (first res) {} (rest res)))))
+      (if (seq? res)
+        res
+        (list res))
+      (list (apply vector (first res) {} (rest res))))))
 
 (defn el [tag attr children]
   (cond-> [tag]
@@ -79,7 +82,8 @@
      (not-empty children)) (into children)))
 
 (defn hiccup? [x]
-  (and (vector? x)
+  (and (not (map-entry? x))
+       (vector? x)
        (keyword? (first x))))
 
 (defn merge-same-tag-siblings [children]
@@ -91,6 +95,12 @@
                      [(el tag attrs (merge-same-tag-siblings
                                      (mapcat #(drop 2 %) xs)))])
                    xs)))))
+
+(defn combine-sibling-strings [xs]
+  (->> (partition-by string? xs)
+       (mapcat #(if (string? (first %))
+                  [(str/join %)]
+                  %))))
 
 (defn- map-by [k xs]
   (->> xs
@@ -173,9 +183,27 @@
         attrs (mark-def-attrs mark-def)]
     (el tag attrs content)))
 
+(defn- flatten-seqs [x]
+  (let [flattenable? #(or (list? %) (seq? %))]
+    (->> (tree-seq flattenable? seq x)
+         rest
+         (filter (complement flattenable?)))))
+
+(defn flatten-hiccup [x]
+  (walk/postwalk
+   (fn [form]
+     (if (hiccup? form)
+       (let [has-attrs? (map? (second form))]
+         (el
+          (first form)
+          (if has-attrs? (second form) {})
+          (flatten-seqs (drop (if has-attrs? 2 1) form))))
+       form))
+   x))
+
 (defn block-hiccup [opt mark content]
   (if-let [def (get-in opt [:_defs mark])]
-    (render-mark opt def content)
+    (flatten-hiccup (render-mark opt def content))
     (el (tag-name mark) (mark-attrs mark) content)))
 
 (defn text-content [text]
@@ -201,8 +229,9 @@
         opt (assoc opt :_defs (map-by :_key mark-defs))
         content (->> children
                      sort-marks
-                     (map #(render-hiccup-block (assoc opt ::inline? true) %))
-                     merge-same-tag-siblings)]
+                     (mapcat #(render-hiccup-block (assoc opt ::inline? true) %))
+                     merge-same-tag-siblings
+                     combine-sibling-strings)]
     (el (tag-name style block) {} content)))
 
 (defmethod render-block :image [opt {:keys [asset]}]
