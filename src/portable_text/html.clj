@@ -49,7 +49,8 @@
                        (map to-html)
                        (str/join ""))
     (nil? x) ""
-    :default (let [[tag attrs content] (parse-hiccup-vector x)
+    :default (let [x (parse-hiccup-vector x)
+                   [tag attrs] x
                    tag-name (name tag)]
                (if (self-closing tag)
                  (format "<%s%s/>" tag-name (attr-str attrs))

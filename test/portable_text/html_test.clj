@@ -1165,7 +1165,7 @@
            '("Strømkostnad du ville fått i ")
            [:span.js-el-price-month [:span.inner]]
            '(".")])
-         "<p>Strømkostnad du ville fått i <span class=\"js-el-price-month\"></span>.</p>")))
+         "<p>Strømkostnad du ville fått i <span class=\"js-el-price-month\"><span class=\"inner\"></span></span>.</p>")))
 
 (defmethod sut/render-block :productPlaceholder [config block]
   [:span (format "{{%s}}" (:var-name block))])
@@ -1189,3 +1189,7 @@
            :mark-defs []
            :style "normal"})
          [:p {} "Some text here, and then more text over here. And here:" [:br] "a newline"])))
+
+(deftest is-capable-of-converting-lean-hiccup-to-html
+  (is (= (sut/to-html [:span.ml-text "Broom"])
+         "<span class=\"ml-text\">Broom</span>")))
