@@ -183,11 +183,13 @@
         attrs (mark-def-attrs mark-def)]
     (el tag attrs content)))
 
+(defn- list-like? [x]
+  (or (list? x) (seq? x)))
+
 (defn- flatten-seqs [x]
-  (let [flattenable? #(or (list? %) (seq? %))]
-    (->> (tree-seq flattenable? seq x)
-         rest
-         (filter (complement flattenable?)))))
+  (->> (tree-seq list-like? seq x)
+       rest
+       (filter (complement list-like?))))
 
 (defn flatten-hiccup [x]
   (walk/postwalk
@@ -288,6 +290,7 @@
        (cond
          (empty? content) nil
          (= 1 (count content)) (first content)
+         (list-like? content) (apply vector :div {} content)
          :default [:div {} content])))))
 
 (defn render
